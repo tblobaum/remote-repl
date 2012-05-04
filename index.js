@@ -1,5 +1,6 @@
 var repl = require('repl')
   , net = require('net')
+  , readline = require('readline')
   , secret = ''
 
 function remoteRepl (type, opts) {
@@ -7,10 +8,10 @@ function remoteRepl (type, opts) {
   opts.port = opts.port || 3021
   opts.path = opts.path || '/tmp/node-repl-sock'
   secret = opts.secret || ''
-
   switch (type) {
   case 'stdin':
-    stdinRepl()
+    console.log('stdin repl')
+    repl.start('➜ ')
     break
   case 'tcp':
     netRepl('tcp', opts.port)
@@ -21,37 +22,21 @@ function remoteRepl (type, opts) {
   }
 }
 
-function stdinRepl () {
-  console.log('stdin repl')
-  repl.start('repl (stdin) > ')
-}
-
 function netRepl (type, p) {
-  console.log(type + 'repl listening at ' + p)
   net.createServer(function (socket) {
-    socket.write('Welcome to ' + process.title + ' repl (' + type + ') \r\n')
-    socket.write('Password: ')
-    socket.on('data', setup)
-    function setup (data) {
-      authenticate(data, socket, function () {
-        socket.write('authenticated \r\n')
-        socket.removeListener('data', setup)
-        repl.start('repl (' + type + ') > ', socket)
-      })
-    }
+    rl = readline.createInterface(socket, socket)
+    rl.question('Password: ', function (password) {
+      password = password.replace(/(\r\n|\n|\r)/gm, '')
+      if (secret === password) {
+        socket.write('Welcome to remote-repl ('+process.title+':'+type+') -- type .help for some commands \r\n')
+        repl.start('➜ ', socket)
+      }
+      else {
+        socket.write('authentication failed \r\n')
+        socket.destroy()
+      }
+    })
   }).listen(p)
-}
-
-function authenticate (pass, socket, callback) {
-  pass = pass.toString()
-  if ( secret + '\n' === String(pass) )
-    callback()
-  else {
-    var err = new Error('invalid secret')
-    console.warn(err, pass)
-    socket.write(err.message + '\r\n')
-    socket.destroy()
-  }
 }
 
 module.exports = remoteRepl
