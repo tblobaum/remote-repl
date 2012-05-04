@@ -26,7 +26,7 @@ require('remote-repl')('tcp', { port: 3021, secret: 'beepboop' })
 
 Then you can use `netcat` to connect with `nc localhost 3021`
 
-<img src='remote-repl/screenshot.png' />
+<img src='remote-repl/blob/master/screenshot.png' />
 
 ### unix sockets
 
