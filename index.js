@@ -1,7 +1,6 @@
 var repl = require('repl')
-var net = require('net')
-
-secret = ''
+  , net = require('net')
+  , secret = ''
 
 function remoteRepl (type, opts) {
   opts = opts || {}
