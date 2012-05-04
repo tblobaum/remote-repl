@@ -29,7 +29,7 @@ function stdinRepl () {
 function netRepl (type, p) {
   console.log(type + 'repl listening at ' + p)
   net.createServer(function (socket) {
-    socket.write('Welcome to ' + process.title + ' repl (tcp) \r\n')
+    socket.write('Welcome to ' + process.title + ' repl (' + type + ') \r\n')
     socket.write('Password: ')
     socket.on('data', setup)
     function setup (data) {
@@ -45,7 +45,7 @@ function netRepl (type, p) {
 function authenticate (pass, socket, callback) {
   pass = pass.toString()
   if ( secret + '\n' === String(pass) )
-    return callback()
+    callback()
   else {
     var err = new Error('invalid secret')
     console.warn(err, pass)
