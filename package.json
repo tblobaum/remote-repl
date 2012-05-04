@@ -2,7 +2,7 @@
   "author": "Thomas Blobaum <tblobaum@gmail.com> (https://github.com/tblobaum/)",
   "name": "remote-repl",
   "description": "super simple remote repl for node processes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": ""
   },
