@@ -32,7 +32,7 @@ Then you can use `netcat` to connect with `nc localhost 3021`
 
 ```js
 
-require('remote-repl')('tcp', { path: '/tmp/node-repl-sock', secret: 'beepboop' })
+require('remote-repl')('unix socket', { path: '/tmp/node-repl-sock', secret: 'beepboop' })
 ```
 
 And then use `socat` to connect with `socat /tmp/node-repl-sock stdin`
